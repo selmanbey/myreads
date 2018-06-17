@@ -8,15 +8,19 @@ class Book extends Component {
     bookTitle: PropTypes.string.isRequired,
     bookAuthors: PropTypes.string.isRequired,
     backgroundImage: PropTypes.string,
+    currentStatus: PropTypes.string,
+  }
+
+  static defaultProps = {
+    currentStatus: "none",
   }
 
   state = {
-    currentStatus: "currentlyReading"
+    currentStatus: this.props.currentStatus
   }
 
   handleSelect = (status) => {
     this.setState({currentStatus: status});
-    console.log(this.state.currentStatus)
   }
 
   render() {
@@ -25,7 +29,7 @@ class Book extends Component {
           <div className="book-top">
             <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: this.props.backgroundImage }}></div>
             <div className="book-shelf-changer">
-              <select onChange={ (e) => {this.handleSelect(e.target.value)} }>
+              <select value={ this.state.currentStatus } onChange={ (e) => {this.handleSelect(e.target.value)} }>
                 <option value="move" disabled>Move to...</option>
                 <option value="currentlyReading">Currently Reading</option>
                 <option value="wantToRead">Want to Read</option>

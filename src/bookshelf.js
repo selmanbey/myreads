@@ -35,7 +35,8 @@ class Bookshelf extends Component {
           <Book
             backgroundImage={ bgImage }
             bookTitle={ booksInTheShelf[book].title }
-            bookAuthors={ author } />
+            bookAuthors={ author }
+            currentStatus="none" />
         </li>)
     }
 

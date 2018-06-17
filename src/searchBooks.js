@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import Book from './book'
 import * as BooksAPI from './BooksAPI'
-import escapeStringRegexp from 'escape-string-regexp'
+// import escapeStringRegexp from 'escape-string-regexp'
 
 
 class SearchBooks extends Component {
@@ -14,17 +14,19 @@ class SearchBooks extends Component {
   handleChange = (value) => {
     this.setState({
       query: value,
+    }, () => {
+      this.renderBooks()
     });
-
-    this.renderBooks();
   }
 
   renderBooks = () => {
     BooksAPI.search(this.state.query).then((data) => {
       if(!data || data.hasOwnProperty("error")) {
-        // console.log("if", data)
+        console.log(this.state.query)
+        console.log("if", data)
         this.setState({foundBooks: []})
       } else {
+        console.log(this.state.query)
         console.log("else", this.state.query, data)
         this.setState({foundBooks: data})
       }
@@ -37,12 +39,13 @@ class SearchBooks extends Component {
 
     for(let book in foundBooks) {
 
-        // Checks if there is proper data in foundBooks (to prevent crashes)
-        // Checks if there is more than one author for the book
+        // Sanitize author
         let author;
-        if(!foundBooks[book]["authors"] || foundBooks[book].hasOwnProperty("error")) {
+        if(foundBooks[book].hasOwnProperty("error")) {
           // pass
-        } else {
+        } else if (!foundBooks[book].hasOwnProperty("authors")) {
+          author = "Unknown"
+        }else {
             if (foundBooks[book]["authors"].length > 1) {
               author = foundBooks[book]["authors"][0] + " et al."
             } else {
@@ -50,10 +53,19 @@ class SearchBooks extends Component {
             }
         }
 
-        let bgImage = "url('" + foundBooks[book]["imageLinks"]["smallThumbnail"] + "')"
+        //Sanitize cover
+        let bgImage;
+        if(foundBooks[book].hasOwnProperty("error")) {
+          // pass
+        } else if (!foundBooks[book].hasOwnProperty("imageLinks")) {
+          // COULDN'T MAKE IT WORK WITH LOCAL PNG FILE (WHY?)
+          bgImage = "url('http://www.scottishbooktrust.com/files/styles/book-cover-book-page/public/cover-not-available_215.png?itok=rM-kHv87')"
+        } else {
+          bgImage = "url('" + foundBooks[book]["imageLinks"]["smallThumbnail"] + "')"
+        }
 
         template.push(
-        <li>
+        <li key = { foundBooks[book].id }>
           <Book
             backgroundImage={ bgImage }
             bookTitle={ foundBooks[book].title }
@@ -75,7 +87,10 @@ class SearchBooks extends Component {
               However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
               you don't find a specific author or title. Every search is limited by search terms.
             */}
-            <input type="text" placeholder="Search by title or author" value={query} onChange={ (e) => {this.handleChange(e.target.value)}}/>
+            <input type="text"
+              placeholder="Search by title or author"
+              value={query}
+              onChange={ (e) => {this.handleChange(e.target.value)} }/>
 
           </div>
         </div>
