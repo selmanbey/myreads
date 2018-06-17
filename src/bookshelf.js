@@ -28,22 +28,24 @@ class Bookshelf extends Component {
             }
         }
 
-        let bgImage = "url('\" + booksInTheShelf[book][\"imageLinks\"][\"smallThumbnail\"] + \"')"
+        let bgImage = "url('" + booksInTheShelf[book]["imageLinks"]["smallThumbnail"] + "')"
 
         template.push(
-        <li>
+        <li key={ booksInTheShelf[book].id } >
           <Book
+            bookObject = { booksInTheShelf[book] }
             backgroundImage={ bgImage }
             bookTitle={ booksInTheShelf[book].title }
             bookAuthors={ author }
-            currentStatus="none" />
+            currentStatus={ booksInTheShelf[book].shelf }
+            />
         </li>)
     }
 
     return (
       <div>
         <div className="bookshelf">
-          <h2 className="bookshelf-title">Bookshelf Trial</h2>
+          <h2 className="bookshelf-title"> { name }</h2>
           <div className="bookshelf-books">
             <ol className="books-grid">
               {

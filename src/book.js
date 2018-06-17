@@ -1,26 +1,32 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types';
+import * as BooksAPI from './BooksAPI';
 
 // import { Link } from 'react-router-dom'
 
 class Book extends Component {
   static propTypes = {
+    bookObject: PropTypes.object.isRequired,
     bookTitle: PropTypes.string.isRequired,
     bookAuthors: PropTypes.string.isRequired,
     backgroundImage: PropTypes.string,
     currentStatus: PropTypes.string,
   }
 
-  static defaultProps = {
-    currentStatus: "none",
-  }
+  // static defaultProps = {
+  //   currentStatus: "none",
+  // }
 
   state = {
     currentStatus: this.props.currentStatus
   }
 
   handleSelect = (status) => {
-    this.setState({currentStatus: status});
+    this.setState({currentStatus: status})
+    BooksAPI.update(this.props.bookObject, status).then(
+      (data) => { console.log(data) }
+    )
+    this.forceUpdate()
   }
 
   render() {
