@@ -39,30 +39,11 @@ class SearchBooks extends Component {
 
     for(let book in foundBooks) {
 
-        // // Sanitize author
-        // let author;
-        // if(foundBooks[book].hasOwnProperty("error")) {
-        //   // pass
-        // } else if (!foundBooks[book].hasOwnProperty("authors")) {
-        //   author = "Unknown"
-        // }else {
-        //     if (foundBooks[book]["authors"].length > 1) {
-        //       author = foundBooks[book]["authors"][0] + " et al."
-        //     } else {
-        //       author = foundBooks[book]["authors"][0]
-        //     }
-        // }
-        //
-        // //Sanitize cover
-        // let bgImage;
-        // if(foundBooks[book].hasOwnProperty("error")) {
-        //   // pass
-        // } else if (!foundBooks[book].hasOwnProperty("imageLinks")) {
-        //   // COULDN'T MAKE IT WORK WITH LOCAL PNG FILE (WHY?)
-        //   bgImage = "url('http://www.scottishbooktrust.com/files/styles/book-cover-book-page/public/cover-not-available_215.png?itok=rM-kHv87')"
-        // } else {
-        //   bgImage = "url('" + foundBooks[book]["imageLinks"]["smallThumbnail"] + "')"
-        // }
+        let bookObject = foundBooks[book]
+
+        foundBooks[book].hasOwnProperty("shelf") ?
+        bookObject["shelf"] = foundBooks[book].shelf :
+        bookObject["shelf"] = "none"
 
         template.push(
         <li key = { foundBooks[book].id }>
