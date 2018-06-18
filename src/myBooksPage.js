@@ -21,30 +21,44 @@ class MyBooksPage extends Component {
 
   static propTypes = {
     books: PropTypes.array.isRequired,
-    // currentlyReading: PropTypes.array.isRequired,
-    // wantToRead: PropTypes.array.isRequired,
-    // read: PropTypes.array.isRequired
   }
 
-  onRefresh = (data) => {
-    // this.props.onRefresh()
-    this.updateBooks(data)
+  // refreshes the page and the sub-components when a Book is moved into a
+  // different shelf (the trigger is in Book component, <select> event)
+  onRefresh = (data, id, shelf) => {
+    this.updateBooks(data, id, shelf)
   }
 
+  // takes the shelf info from Book component when the shelf changes
+  // pipes it to updateBooks
+  changeShelf = (id, shelf) => {
 
+    let newBooks = this.props.books.map( (book) => {
+      if(book.id === id) {
+        book.shelf = shelf
+        return book
+      } else {
+        return book
+      }
+    })
 
-  updateBooks = (updateData) => {
-    let currentlyReading = this.props.books.filter( (book) => {
+    return newBooks
+  }
+
+  //updates the book shelves and sets the state accordingly
+  updateBooks = (updateData, id, shelf) => {
+    let newBooks = this.changeShelf(id, shelf)
+    console.log("newBooks in updateBooks:", newBooks)
+
+    let currentlyReading = newBooks.filter( (book) => {
       return updateData["currentlyReading"].includes(book.id)
     });
 
-    console.log("CURRENTLY READING:", currentlyReading)
-
-    let wantToRead = this.props.books.filter( (book) => {
+    let wantToRead = newBooks.filter( (book) => {
       return updateData["wantToRead"].includes(book.id)
     });
 
-    let read = this.props.books.filter( (book) => {
+    let read = newBooks.filter( (book) => {
       return updateData["read"].includes(book.id)
     });
 
@@ -58,7 +72,7 @@ class MyBooksPage extends Component {
 
 
   render() {
-    // let { currentlyReading, wantToRead, read } = this.props
+
     let { currentlyReading, wantToRead, read } = this.state
 
     return (
@@ -71,17 +85,17 @@ class MyBooksPage extends Component {
             <Bookshelf
               name="currentlyReading"
               booksInTheShelf={ currentlyReading }
-              onRefresh={ this.onRefresh }> Currently Reading </Bookshelf>
+              onRefresh={ this.onRefresh } />
 
               <Bookshelf
                 name="wantToRead"
                 booksInTheShelf={ wantToRead }
-                onRefresh={ this.onRefresh } > Want To Read </Bookshelf>
+                onRefresh={ this.onRefresh } />
 
               <Bookshelf
                   name="read"
                   booksInTheShelf={ read }
-                  onRefresh={ this.onRefresh } > Read </Bookshelf>
+                  onRefresh={ this.onRefresh } />
         </div>
         <div className="open-search">
           <Link to="/create">Add a book</Link>

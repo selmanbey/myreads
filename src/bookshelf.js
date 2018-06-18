@@ -17,38 +17,17 @@ class Bookshelf extends Component {
   onRefresh = (data) => {
     this.props.onRefresh(data)
   }
-  // refreshParent = this.props.refreshPage.bind(this)
 
   render() {
-
     const { name, booksInTheShelf } = this.props
     let template = [];
 
     for(let book in booksInTheShelf) {
 
-        // Checks if there is proper data in booksInTheShelf (to prevent crashes)
-        // Checks if there is more than one author for the book
-        let author;
-        if(!booksInTheShelf[book]["authors"] || booksInTheShelf[book].hasOwnProperty("error")) {
-          // pass
-        } else {
-            if (booksInTheShelf[book]["authors"].length > 1) {
-              author = booksInTheShelf[book]["authors"][0] + " et al."
-            } else {
-              author = booksInTheShelf[book]["authors"][0]
-            }
-        }
-
-        let bgImage = "url('" + booksInTheShelf[book]["imageLinks"]["smallThumbnail"] + "')"
-
         template.push(
         <li key={ booksInTheShelf[book].id } >
           <Book
             bookObject = { booksInTheShelf[book] }
-            backgroundImage={ bgImage }
-            bookTitle={ booksInTheShelf[book].title }
-            bookAuthors={ author }
-            currentStatus={ booksInTheShelf[book].shelf }
             onRefresh={ this.props.onRefresh }
             />
         </li>)

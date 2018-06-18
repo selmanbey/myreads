@@ -2,39 +2,55 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import * as BooksAPI from './BooksAPI';
 
-// import { Link } from 'react-router-dom'
-
 class Book extends Component {
   static propTypes = {
     bookObject: PropTypes.object.isRequired,
-    bookTitle: PropTypes.string.isRequired,
-    bookAuthors: PropTypes.string.isRequired,
-    backgroundImage: PropTypes.string,
-    currentStatus: PropTypes.string,
   }
-
-  // static defaultProps = {
-  //   currentStatus: "none",
-  // }
 
   state = {
-    currentStatus: this.props.currentStatus
+    currentStatus: this.props.bookObject.shelf
   }
 
+  // 1. updates the shelf info in the database
+  // 2. sends id and shelf to update the info in the MyBooksPage state
   handleSelect = (status) => {
-    this.setState({currentStatus: status})
     BooksAPI.update(this.props.bookObject, status).then(
-      (data) => { this.props.onRefresh(data) }
+      (data) => {
+        let id = this.props.bookObject.id
+        let shelf = status
+        this.props.onRefresh(data, id, shelf)
+      }
     )
   }
 
   render() {
+
+    console.log("books.js rendered")
+
+    let { bookObject } = this.props
+    // Checks if there is proper data in booksInTheShelf (to prevent crashes)
+    // Checks if there is more than one author for the book
+    let author;
+    if(!bookObject["authors"] || bookObject.hasOwnProperty("error")) {
+      // pass
+    } else {
+        if (bookObject["authors"].length > 1) {
+          author = bookObject["authors"][0] + " et al."
+        } else {
+          author = bookObject["authors"][0]
+        }
+    }
+
+    let bgImage = "url('" + bookObject["imageLinks"]["smallThumbnail"] + "')"
+
     return (
         <div className="book">
           <div className="book-top">
-            <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: this.props.backgroundImage }}></div>
+            <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: bgImage }}></div>
             <div className="book-shelf-changer">
-              <select value={ this.state.currentStatus } onChange={ (e) => {this.handleSelect(e.target.value)} }>
+              <select value={ this.state.currentStatus } onChange={ (e) => {
+                this.handleSelect(e.target.value);
+              } }>
                 <option value="move" disabled>Move to...</option>
                 <option value="currentlyReading">Currently Reading</option>
                 <option value="wantToRead">Want to Read</option>
@@ -43,8 +59,8 @@ class Book extends Component {
               </select>
             </div>
           </div>
-          <div className="book-title">{ this.props.bookTitle }</div>
-          <div className="book-authors">{ this.props.bookAuthors}</div>
+          <div className="book-title">{ bookObject.title }</div>
+          <div className="book-authors">{ author }</div>
         </div>
     )
   }

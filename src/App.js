@@ -65,7 +65,7 @@ class BooksApp extends React.Component {
         // currentlyReading,
         // wantToRead,
         // read,
-        isLoading: false
+        isLoading: false,
       })
 
       }).catch( (error) => {
@@ -88,13 +88,13 @@ class BooksApp extends React.Component {
       <div className="app">
 
         <Route exact path="/" render={ () => ( this.state.isLoading ?
-          <h1> { this.state.message }</h1> :
+          <h1> { this.state.message } </h1> :
           <MyBooksPage
             books={ this.state.allMyBooks }
-          // currentlyReading={ this.state.currentlyReading }
-          // wantToRead={ this.state.wantToRead }
-          // read={ this.state.read }
-          onRefresh={ this.refreshPage } />
+            // currentlyReading={ this.state.currentlyReading }
+            // wantToRead={ this.state.wantToRead }
+            // read={ this.state.read }
+            onRefresh={ this.refreshPage } />
         )} />
 
         <Route path="/create" render={ () => (
