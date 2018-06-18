@@ -24,9 +24,8 @@ class Book extends Component {
   handleSelect = (status) => {
     this.setState({currentStatus: status})
     BooksAPI.update(this.props.bookObject, status).then(
-      // (data) => { console.log(data) }
+      (data) => { this.props.onRefresh(data) }
     )
-    this.props.onRefresh()
   }
 
   render() {

@@ -14,8 +14,8 @@ class Bookshelf extends Component {
     booksInTheShelf: PropTypes.array,
   }
 
-  onRefresh() {
-    this.props.onRefresh()
+  onRefresh = (data) => {
+    this.props.onRefresh(data)
   }
   // refreshParent = this.props.refreshPage.bind(this)
 

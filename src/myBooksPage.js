@@ -13,19 +13,53 @@ class MyBooksPage extends Component {
    this.onRefresh = this.onRefresh.bind(this)
  }
 
-  static propTypes = {
-    currentlyReading: PropTypes.array.isRequired,
-    wantToRead: PropTypes.array.isRequired,
-    read: PropTypes.array.isRequired
+  state = {
+    currentlyReading: this.props.books.filter(book => book.shelf === "currentlyReading"),
+    wantToRead: this.props.books.filter(book => book.shelf === "wantToRead"),
+    read: this.props.books.filter(book => book.shelf === "read")
   }
 
-  onRefresh() {
-    this.props.onRefresh()
+  static propTypes = {
+    books: PropTypes.array.isRequired,
+    // currentlyReading: PropTypes.array.isRequired,
+    // wantToRead: PropTypes.array.isRequired,
+    // read: PropTypes.array.isRequired
+  }
+
+  onRefresh = (data) => {
+    // this.props.onRefresh()
+    this.updateBooks(data)
+  }
+
+
+
+  updateBooks = (updateData) => {
+    let currentlyReading = this.props.books.filter( (book) => {
+      return updateData["currentlyReading"].includes(book.id)
+    });
+
+    console.log("CURRENTLY READING:", currentlyReading)
+
+    let wantToRead = this.props.books.filter( (book) => {
+      return updateData["wantToRead"].includes(book.id)
+    });
+
+    let read = this.props.books.filter( (book) => {
+      return updateData["read"].includes(book.id)
+    });
+
+    this.setState({
+      currentlyReading,
+      wantToRead,
+      read
+    })
+
   }
 
 
   render() {
-    let { currentlyReading, wantToRead, read } = this.props
+    // let { currentlyReading, wantToRead, read } = this.props
+    let { currentlyReading, wantToRead, read } = this.state
 
     return (
       <div className="list-books">
