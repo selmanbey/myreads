@@ -6,19 +6,31 @@ import MyBooksPage from './myBooksPage'
 import * as BooksAPI from './BooksAPI'
 
 class BooksApp extends React.Component {
+  constructor(props) {
+   super(props)
+
+   this.refreshPage = this.refreshPage.bind(this)
+ }
 
   state = {
-    // books: []
     currentlyReading: [],
     wantToRead: [],
-    read: []
+    read: [],
+    isLoading: true,
+    message: "Book data is retrieved from server at the moment. Please wait. Should not be so long.",
+    needsRefreshing: false
   }
 
+  refreshPage() {
+      if(this.state.needsRefreshing) {
+        this.setState({needsRefreshing: false})
+      } else {
+        this.setState({needsRefreshing: true})
+      }
+  }
 
   componentDidMount() {
     BooksAPI.getAll().then((books) => {
-      // this.setState({ books })
-      // console.log("App.js", "/ state: books: ", this.state.books)
 
       let currentlyReading = [];
       let wantToRead = [];
@@ -37,26 +49,36 @@ class BooksApp extends React.Component {
       this.setState({
         currentlyReading,
         wantToRead,
-        read
+        read,
+        isLoading: false
       })
 
-      console.log(this.state.currentlyReading)
-
       }).catch( (error) => {
-        window.alert("There is a problem with the connection to server. Fetch Failed. See the console for details.")
+        this.setState({
+          message: "There occured a problem while retrieving data. Fetch Failed. Try refreshing the page. If problem persist, please inspect the error in the console."
+        })
         console.error(error)
+
     })
   }
 
+  // componentDidUpdate() {
+  //   this.componentDidMount()
+  // }
+
   render() {
+    console.log("App.js rendered")
+
     return (
       <div className="app">
 
-        <Route exact path="/" render={ () => (
+        <Route exact path="/" render={ () => ( this.state.isLoading ?
+          <h1> { this.state.message }</h1> :
           <MyBooksPage
           currentlyReading={ this.state.currentlyReading }
           wantToRead={ this.state.wantToRead }
-          read={ this.state.read }/>
+          read={ this.state.read }
+          onRefresh={ this.refreshPage } />
         )} />
 
         <Route path="/create" render={ () => (
