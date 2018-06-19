@@ -21,11 +21,28 @@ class SearchBooks extends Component {
 
   renderBooks = () => {
     BooksAPI.search(this.state.query).then((data) => {
+
       if(!data || data.hasOwnProperty("error")) {
         this.setState({foundBooks: []})
       } else {
-        this.setState({foundBooks: data})
+        BooksAPI.getAll().then((myBooks) => {
+          console.log("myBooks inside GetAll:", myBooks)
+          console.log("data inside GetAll:", data)
+
+            let newBooks = this.checkShelves(myBooks, data)
+            console.log("newBooks inside GetAll:", newBooks)
+            this.setState({foundBooks: newBooks}, () => {
+              (console.log("get all set the state", this.state.foundBooks))
+            })
+        })
       }
+
+      // if(!data || data.hasOwnProperty("error")) {
+      //   this.setState({foundBooks: []})
+      // } else {
+      //   this.setState({foundBooks: data})
+      // }
+      console.log("renderBooks triggered", this.state.foundBooks)
     })
   }
 
@@ -33,6 +50,48 @@ class SearchBooks extends Component {
     BooksAPI.update(data, shelf).then(
       this.props.onRefresh()
     )
+
+    BooksAPI.getAll().then((myBooks) => {
+      this.checkShelves(myBooks, this.state.foundBooks)
+    })
+  }
+
+  changeShelf = (id, shelf) => {
+    let newBooks = this.state.foundBooks.map( (book) => {
+      if(book.id === id) {
+        book.shelf = shelf
+        return book
+      } else {
+        return book
+      }
+    })
+
+    this.setState({foundBooks: newBooks})
+    console.log("changeShelf triggered", this.state.foundBooks)
+  }
+
+  checkShelves = (myBooks, searchBooks) => {
+    let hasAnythingChanged: false
+
+    let newBooks = searchBooks.map( (book) => {
+      let idArray = myBooks.map( (mybook) => (mybook.id))
+
+      if (idArray.includes(book.id)) {
+          let newBook = myBooks.filter((mybook) => (mybook.id === book.id))[0];
+          console.log("IF book: ", newBook)
+          hasAnythingChanged = true;
+          return newBook
+      } else {
+        return book
+      }
+    })
+    console.log("newBooks: ", newBooks)
+
+    if(hasAnythingChanged) {
+      this.setState({ foundBooks: newBooks })
+    }
+
+    return newBooks
   }
 
   render() {
@@ -46,6 +105,7 @@ class SearchBooks extends Component {
         foundBooks[book].hasOwnProperty("shelf") ?
         bookObject["shelf"] = foundBooks[book].shelf :
         bookObject["shelf"] = "none"
+
 
         template.push(
         <li key = { foundBooks[book].id }>

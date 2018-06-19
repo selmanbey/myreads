@@ -48,7 +48,6 @@ class MyBooksPage extends Component {
   //updates the book shelves and sets the state accordingly
   updateBooks = (updateData, id, shelf) => {
     let newBooks = this.changeShelf(id, shelf)
-    console.log("newBooks in updateBooks:", newBooks)
 
     let currentlyReading = newBooks.filter( (book) => {
       return updateData["currentlyReading"].includes(book.id)
