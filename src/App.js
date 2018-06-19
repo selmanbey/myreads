@@ -49,8 +49,7 @@ class BooksApp extends React.Component {
         allMyBooks: books,
         isLoading: false,
       })
-
-      console.log("Books are retrieved")
+      console.log("Books are retrieved", this.state.allMyBooks)
       }).catch( (error) => {
         this.setState({
           message: "There occured a problem while retrieving data. Fetch Failed. Try refreshing the page. If problem persist, please inspect the error in the console."
@@ -61,43 +60,8 @@ class BooksApp extends React.Component {
 
   componentDidMount() {
     console.log("componentDidMount")
-    BooksAPI.getAll().then((books) => {
-
-      // let currentlyReading = [];
-      // let wantToRead = [];
-      // let read = [];
-      //
-      // for (let book in books) {
-      //     if (books[book].shelf === "currentlyReading") {
-      //       currentlyReading.push(books[book])
-      //     } else if (books[book].shelf === "wantToRead") {
-      //       wantToRead.push(books[book])
-      //     } else if (books[book].shelf === "read") {
-      //       read.push(books[book])
-      //     }
-      // }
-
-      this.setState({
-        allMyBooks: books,
-        // currentlyReading,
-        // wantToRead,
-        // read,
-        isLoading: false,
-      })
-
-      console.log("Books are retrieved")
-      }).catch( (error) => {
-        this.setState({
-          message: "There occured a problem while retrieving data. Fetch Failed. Try refreshing the page. If problem persist, please inspect the error in the console."
-        })
-        console.error(error)
-
-    })
+    this.fetchBooks()
   }
-  //
-  // componentWillUpdate() {
-  //   this.componentDidMount()
-  // }
 
   render() {
     console.log("App.js rendered")
