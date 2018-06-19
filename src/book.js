@@ -40,7 +40,6 @@ class Book extends Component {
 
     let bgImage = "url('" + bookObject["imageLinks"]["smallThumbnail"] + "')"
 
-    console.log("books.js is now rendering. book is: ", bookObject.title, ", shelf is: ", bookObject.shelf)
     return (
         <div className="book">
           <div className="book-top">

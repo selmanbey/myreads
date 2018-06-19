@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import Book from './book'
 import * as BooksAPI from './BooksAPI'
-// import escapeStringRegexp from 'escape-string-regexp'
 
 
 class SearchBooks extends Component {
@@ -27,9 +26,7 @@ class SearchBooks extends Component {
       } else {
         BooksAPI.getAll().then((myBooks) => {
             let newBooks = this.checkShelves(myBooks, data)
-            this.setState({foundBooks: newBooks}, () => {
-              (console.log("renderBooks set the state: ", this.state.foundBooks))
-            })
+            this.setState({foundBooks: newBooks})
         })
       }
     })
@@ -55,9 +52,7 @@ class SearchBooks extends Component {
       }
     })
 
-    this.setState({foundBooks: newBooks}, () => {
-      console.log("changeShelf set the state", this.state.foundBooks)
-    })
+    this.setState({foundBooks: newBooks})
   }
 
   checkShelves = (myBooks, searchBooks) => {
@@ -76,9 +71,7 @@ class SearchBooks extends Component {
     })
 
     if(hasAnythingChanged) {
-      this.setState({ foundBooks: newBooks }, () => {
-        console.log("checkShelves changed the state: ", newBooks)
-      })
+      this.setState({ foundBooks: newBooks })
     }
 
     return newBooks
@@ -88,7 +81,6 @@ class SearchBooks extends Component {
     const {query, foundBooks} = this.state
     let template = [];
 
-    console.log("foundBooks inside render: ", foundBooks)
     for(let book in foundBooks) {
 
         let bookObject = foundBooks[book]
@@ -97,8 +89,6 @@ class SearchBooks extends Component {
         bookObject["shelf"] = foundBooks[book].shelf :
         bookObject["shelf"] = "none"
 
-
-        console.log("searchBooks serves for templating. Title + Shelf ", bookObject.title, bookObject.shelf)
         template.push(
         <li key = { foundBooks[book].id }>
           <Book
@@ -107,7 +97,6 @@ class SearchBooks extends Component {
         </li>)
     }
 
-    console.log("searchBooks.js is now rendering")
     return (
       <div className="search-books">
         <div className="search-books-bar">

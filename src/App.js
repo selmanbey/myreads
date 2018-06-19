@@ -14,34 +14,20 @@ class BooksApp extends React.Component {
 
   state = {
     allMyBooks: [],
-    // currentlyReading: [],
-    // wantToRead: [],
-    // read: [],
     isLoading: true,
     message: "Book data is retrieved from server at the moment. Please wait. Should not be so long.",
     needsRefreshing: false
   }
 
   refreshPage() {
-
+      // ternary operator serving as a refresh toggle
       this.state.needsRefreshing ?
       this.setState({needsRefreshing: false}) :
       this.setState({needsRefreshing: true})
-      console.log("needsRefreshing stateSet: ", this.state.needsRefreshing)
+
       this.fetchBooks()
-      // if(this.state.needsRefreshing) {
-      //   this.setState({needsRefreshing: false})
-      // } else {
-      //   this.setState({needsRefreshing: true})
-      // }
   }
 
-  // changeBookFolder = (book, shelf) => {
-  //   if (shelf === "currentlyReading") {
-  //
-  //   } else if (shelf === "wantToRead") {
-  //   } else if (shelf === "read")
-  // }
 
   fetchBooks() {
     BooksAPI.getAll().then((books) => {
@@ -49,7 +35,6 @@ class BooksApp extends React.Component {
         allMyBooks: books,
         isLoading: false,
       })
-      console.log("Books are retrieved", this.state.allMyBooks)
       }).catch( (error) => {
         this.setState({
           message: "There occured a problem while retrieving data. Fetch Failed. Try refreshing the page. If problem persist, please inspect the error in the console."
@@ -59,12 +44,10 @@ class BooksApp extends React.Component {
   }
 
   componentDidMount() {
-    console.log("componentDidMount")
     this.fetchBooks()
   }
 
   render() {
-    console.log("App.js rendered")
 
     return (
       <div id={ this.state.needsRefreshing.toString() } className="app">
@@ -73,9 +56,6 @@ class BooksApp extends React.Component {
           <h1> { this.state.message } </h1> :
           <MyBooksPage
             books={ this.state.allMyBooks }
-            // currentlyReading={ this.state.currentlyReading }
-            // wantToRead={ this.state.wantToRead }
-            // read={ this.state.read }
             onRefresh={ this.refreshPage } />
         )} />
 
