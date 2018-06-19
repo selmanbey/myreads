@@ -20,6 +20,21 @@ class Bookshelf extends Component {
 
   render() {
     const { name, booksInTheShelf } = this.props
+
+    let componentTitle;
+
+    switch(name) {
+      case "currentlyReading":
+        componentTitle = "Currently Reading"
+        break
+      case "wantToRead":
+        componentTitle = "Want To Read"
+        break
+      case "read":
+        componentTitle = "Read"
+        break
+    }
+
     let template = [];
 
     for(let book in booksInTheShelf) {
@@ -36,7 +51,7 @@ class Bookshelf extends Component {
     return (
       <div>
         <div className="bookshelf">
-          <h2 className="bookshelf-title"> { name }</h2>
+          <h2 className="bookshelf-title"> { componentTitle }</h2>
           <div className="bookshelf-books">
             <ol className="books-grid">
               {
