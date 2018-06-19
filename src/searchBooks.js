@@ -22,15 +22,17 @@ class SearchBooks extends Component {
   renderBooks = () => {
     BooksAPI.search(this.state.query).then((data) => {
       if(!data || data.hasOwnProperty("error")) {
-        console.log(this.state.query)
-        console.log("if", data)
         this.setState({foundBooks: []})
       } else {
-        console.log(this.state.query)
-        console.log("else", this.state.query, data)
         this.setState({foundBooks: data})
       }
     })
+  }
+
+  onRefresh = (data, id, shelf) => {
+    BooksAPI.update(data, shelf).then(
+      this.props.onRefresh()
+    )
   }
 
   render() {
@@ -48,15 +50,16 @@ class SearchBooks extends Component {
         template.push(
         <li key = { foundBooks[book].id }>
           <Book
-            bookObject= { foundBooks[book] } />
+            bookObject= { bookObject }
+            onRefresh= { this.onRefresh }/>
         </li>)
     }
 
-
+    console.log("searchBooks.js rendered")
     return (
       <div className="search-books">
         <div className="search-books-bar">
-          <Link className="close-search" to="/">Close</Link>
+          <Link className="close-search" to="/" onClick= { this.props.onRefresh }> Close </Link>
           <div className="search-books-input-wrapper">
             {/*
               NOTES: The search from BooksAPI is limited to a particular set of search terms.

@@ -28,6 +28,7 @@ class BooksApp extends React.Component {
       this.setState({needsRefreshing: false}) :
       this.setState({needsRefreshing: true})
       console.log("needsRefreshing stateSet: ", this.state.needsRefreshing)
+      this.fetchBooks()
       // if(this.state.needsRefreshing) {
       //   this.setState({needsRefreshing: false})
       // } else {
@@ -42,8 +43,24 @@ class BooksApp extends React.Component {
   //   } else if (shelf === "read")
   // }
 
+  fetchBooks() {
+    BooksAPI.getAll().then((books) => {
+      this.setState({
+        allMyBooks: books,
+        isLoading: false,
+      })
+
+      console.log("Books are retrieved")
+      }).catch( (error) => {
+        this.setState({
+          message: "There occured a problem while retrieving data. Fetch Failed. Try refreshing the page. If problem persist, please inspect the error in the console."
+        })
+        console.error(error)
+    })
+  }
 
   componentDidMount() {
+    console.log("componentDidMount")
     BooksAPI.getAll().then((books) => {
 
       // let currentlyReading = [];
@@ -68,6 +85,7 @@ class BooksApp extends React.Component {
         isLoading: false,
       })
 
+      console.log("Books are retrieved")
       }).catch( (error) => {
         this.setState({
           message: "There occured a problem while retrieving data. Fetch Failed. Try refreshing the page. If problem persist, please inspect the error in the console."
@@ -76,7 +94,7 @@ class BooksApp extends React.Component {
 
     })
   }
-
+  //
   // componentWillUpdate() {
   //   this.componentDidMount()
   // }
@@ -85,7 +103,7 @@ class BooksApp extends React.Component {
     console.log("App.js rendered")
 
     return (
-      <div className="app">
+      <div id={ this.state.needsRefreshing.toString() } className="app">
 
         <Route exact path="/" render={ () => ( this.state.isLoading ?
           <h1> { this.state.message } </h1> :
@@ -98,7 +116,9 @@ class BooksApp extends React.Component {
         )} />
 
         <Route path="/create" render={ () => (
-          <SearchBooks />
+          <SearchBooks
+            onRefresh={ this.refreshPage }
+          />
         )} />
 
       </div>
