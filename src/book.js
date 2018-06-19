@@ -24,9 +24,6 @@ class Book extends Component {
   }
 
   render() {
-
-    console.log("books.js rendered")
-
     let { bookObject } = this.props
     // Checks if there is proper data in booksInTheShelf (to prevent crashes)
     // Checks if there is more than one author for the book
@@ -43,12 +40,13 @@ class Book extends Component {
 
     let bgImage = "url('" + bookObject["imageLinks"]["smallThumbnail"] + "')"
 
+    console.log("books.js is now rendering. book is: ", bookObject.title, ", shelf is: ", bookObject.shelf)
     return (
         <div className="book">
           <div className="book-top">
             <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: bgImage }}></div>
             <div className="book-shelf-changer">
-              <select value={ this.state.currentStatus } onChange={ (e) => {
+              <select value={ this.props.bookObject.shelf } onChange={ (e) => {
                 this.handleSelect(e.target.value);
               } }>
                 <option value="move" disabled>Move to...</option>

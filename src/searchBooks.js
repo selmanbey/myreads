@@ -26,23 +26,12 @@ class SearchBooks extends Component {
         this.setState({foundBooks: []})
       } else {
         BooksAPI.getAll().then((myBooks) => {
-          console.log("myBooks inside GetAll:", myBooks)
-          console.log("data inside GetAll:", data)
-
             let newBooks = this.checkShelves(myBooks, data)
-            console.log("newBooks inside GetAll:", newBooks)
             this.setState({foundBooks: newBooks}, () => {
-              (console.log("get all set the state", this.state.foundBooks))
+              (console.log("renderBooks set the state: ", this.state.foundBooks))
             })
         })
       }
-
-      // if(!data || data.hasOwnProperty("error")) {
-      //   this.setState({foundBooks: []})
-      // } else {
-      //   this.setState({foundBooks: data})
-      // }
-      console.log("renderBooks triggered", this.state.foundBooks)
     })
   }
 
@@ -66,8 +55,9 @@ class SearchBooks extends Component {
       }
     })
 
-    this.setState({foundBooks: newBooks})
-    console.log("changeShelf triggered", this.state.foundBooks)
+    this.setState({foundBooks: newBooks}, () => {
+      console.log("changeShelf set the state", this.state.foundBooks)
+    })
   }
 
   checkShelves = (myBooks, searchBooks) => {
@@ -78,17 +68,17 @@ class SearchBooks extends Component {
 
       if (idArray.includes(book.id)) {
           let newBook = myBooks.filter((mybook) => (mybook.id === book.id))[0];
-          console.log("IF book: ", newBook)
           hasAnythingChanged = true;
           return newBook
       } else {
         return book
       }
     })
-    console.log("newBooks: ", newBooks)
 
     if(hasAnythingChanged) {
-      this.setState({ foundBooks: newBooks })
+      this.setState({ foundBooks: newBooks }, () => {
+        console.log("checkShelves changed the state: ", newBooks)
+      })
     }
 
     return newBooks
@@ -98,6 +88,7 @@ class SearchBooks extends Component {
     const {query, foundBooks} = this.state
     let template = [];
 
+    console.log("foundBooks inside render: ", foundBooks)
     for(let book in foundBooks) {
 
         let bookObject = foundBooks[book]
@@ -107,6 +98,7 @@ class SearchBooks extends Component {
         bookObject["shelf"] = "none"
 
 
+        console.log("searchBooks serves for templating. Title + Shelf ", bookObject.title, bookObject.shelf)
         template.push(
         <li key = { foundBooks[book].id }>
           <Book
@@ -115,7 +107,7 @@ class SearchBooks extends Component {
         </li>)
     }
 
-    console.log("searchBooks.js rendered")
+    console.log("searchBooks.js is now rendering")
     return (
       <div className="search-books">
         <div className="search-books-bar">
