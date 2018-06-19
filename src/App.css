@@ -172,3 +172,15 @@ body, .app {
   text-align: center;
   font-size: 0.8em;
 }
+
+/* search screen */
+
+.empty-search-message {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50vw;
+  margin: 0 auto;
+  color: gray;
+  text-align: justify
+}
