@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import * as BooksAPI from './BooksAPI';
+import * as BooksAPI from './BooksAPI'
+import Image from './assets/unavailablecover.png'
 
 class Book extends Component {
   static propTypes = {
@@ -38,12 +39,21 @@ class Book extends Component {
         }
     }
 
-    let bgImage = "url('" + bookObject["imageLinks"]["smallThumbnail"] + "')"
+    let bgImage;
+    if(bookObject.hasOwnProperty("imageLinks")) {
+      if(bookObject["imageLinks"].hasOwnProperty("smallThumbnail")) {
+        bgImage = bookObject["imageLinks"]["smallThumbnail"]
+      }
+    } else {
+      bgImage = Image
+    }
+
+
 
     return (
         <div className="book">
           <div className="book-top">
-            <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: bgImage }}></div>
+            <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: "url(" + bgImage + ")" }}></div>
             <div className="book-shelf-changer">
               <select value={ this.props.bookObject.shelf } onChange={ (e) => {
                 this.handleSelect(e.target.value);
